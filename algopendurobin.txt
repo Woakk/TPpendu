@@ -1,0 +1,120 @@
+//BUT : Faire une partie de jeu du pendu
+//ENTREE : Un mot entré par un utilisateur
+//SORTIE : Une partie du jeu du pendu
+
+FONCTION intitialisation(VAR : mot : CHAINE) :ENTIER
+//DEBUTFONCTION
+
+	ECRIRE (« Veuillez entrer le mot à deviner, en majuscules ») //On demande à l'utilisateur le mot à faire deviner, à entrer en majuscules 
+	LIRE mot //On lit la réponse de l'utilisateur à l'instruction précédente et on stocke sa réponse dans une chaine de caractères
+	SYSTEME effacer l’écran //On efface l'écran pour que la personne devant deviner ne puisse pas voir la réponse
+	initialisation <- MODULE strlen(mot) //On affecte une valeur à la variable de la longueur de notre mot à l'aide d'une commande qui va compter le nombre de caractères 
+
+//FINFONCTION
+
+PROCEDURE affiche_pendu
+VAR : vie :ENTIER
+//DEBUT (procédure)
+	SYSTEME effacer l’écran //On efface l'écran à chaque nouvelle répétition de la boucle 
+	CASPARMIS CAS10 : ECRIRE (« ») //Le joueur a toutes ses vies 
+		CAS9 : ECRIRE (« _|__ ») //Le joueur perd une vie, on construit la potence 
+		… 
+		CAS1 : ECRIRE (« ____________ ») //Le joueur n’a plus qu’une vie 
+				ECRIRE (« | | ») 
+				ECRIRE (« | 0 ») 
+				ECRIRE (« |/|\ ») 
+				ECRIRE (« | ») 
+				ECRIRE (« | ») 
+				ECRIRE («_|__ »)
+	FINCASPARMIS
+	ECRIRE ("\n")
+//FINPROCEDURE
+
+PROCEDURE fin_jeu
+VAR: vie :ENTIER
+//DEBUT (procédure)
+	SI vie=0 //Si le joueur n’a plus de vies, on affiche la suite :
+		ALORS 
+			ECRIRE (« ____________ »)
+			ECRIRE (« | | ») 
+			ECRIRE (« | 0 ») 
+			ECRIRE (« |/|\ ») 
+			ECRIRE (« |/ \») 
+			ECRIRE (« | ») 
+			ECRIRE («_|__ ») 
+			ECRIRE (« Vous avez perdu, le mot à deviner était : » + s_mot) //Message de Game Over, on affiche aussi le mot qui était à deviner 
+	SINON 
+		SI win=1 //Sinon, ici on contredit l’autre condition de répétition du TANTQUE 
+		ALORS 
+			ECRIRE (« Le mot était bien : » + s_mot + «Félicitations, vous avez gagné ! ») //On affiche le mot ainsi qu’un message de félicitations 
+		FINSI
+	FINSI
+//FINPROCEDURE
+
+FONCTION trouve_lettres(VAR : ltrchoix) : ENTIER
+//DEBUTFONCTION
+	POUR i DE i A nbltr [PAS 1] 
+		SI ltrchoix=s_mot[i] //On teste si la lettre entrée est présente dans la chaine de caractères 
+			ALORS n_mot[i] <- 1 //Si oui, on affecte 1 à la position de la lettre 
+				trouve <- 1 //Et on affecte 1 à la variable pour dire que la lettre est la bonne 
+		FINSI
+	FINPOUR
+	trouve_lettres <- trouve
+//FINFONCTION
+
+PROCEDURE affiche_lettres
+//DEBUT (procédure)
+POUR i DE 0 A nbltr [PAS 1] SI n_mot[i]=1 //Le 1 définit le vrai dans notre jeu 
+	ALORS 
+		ECRIRE s_mot[i] //On affiche la lettre trouvée à sa place 
+		nbaffiche [PAS 1] //On incrémente pour chaque lettre trouvée cette variable 
+SINON
+
+	ECRIRE (« _ ») //Autrement, si on n’a pas trouvé, on garde un vide 
+
+FINSI
+
+//FINPROCEDURE
+
+
+
+VARIABLES : nbltr, vie, n_mot, win, i, nbaffiche, trouve : ENTIERS 
+			s_mot : CHAINE 
+			ltrchoix : CARACTERE
+
+//DEBUT (programme principal)
+
+POUR i DE i A 100 [PAS 1] 
+	FAIRE n_mot[i]=0 
+FINPOUR //Initialisation du tableau du mot, on met toutes les valeurs à 0 pour "faux" 
+
+//Initialisation et Instructions
+
+initialisation(s_mot)
+
+//Jeu
+
+TANTQUE vie > 0 ET win %=1 //Boucle while du jeu, interrompue si l'une des deux conditions est fausse 
+	FAIRE 
+		affiche_pendu
+
+
+affiche_lettres
+
+SI (nbaffiche=nbltr) //Condition de victoire : si ces deux valeurs sont égales 
+	ALORS 
+		win <-1 //On sort de notre TANTQUE en contredisant la condition de répétition 
+FINSI
+
+ECRIRE (« Veuillez entrer une lettre majuscule : ») 
+LIRE ltrchoix
+trouve_lettres(ltrchoix)
+
+
+SYSTEME effacer l’écran //On efface l’écran pour afficher la suite 
+
+//Défaite et Victoire
+
+fin_jeu
+
+//FIN
